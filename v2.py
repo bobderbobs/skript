@@ -94,10 +94,10 @@ for i in range(anzahl):
     bilanz.append(bilanz[0].copy())
 
 
-nachfrage = [0, 36000, 40000, 43000]
+nachfrage = [0, 45000, 49000, 56000]
 fluktuation = [0, 0, 0, 0]
 
-plan_einkauf = [0, 82000, 82000, 82000]
+plan_einkauf = [0, 46000, 46000, 46000]
 plan_produktion = [0, 46000, 46000, 46000]
 abschaffen = [0, 0, 0, 0]
 m_anschaffen = [0, 0]
@@ -183,11 +183,11 @@ for i in range(1, anzahl+1):
 
         #Übersicht
         fertigung[i].iloc[3, 2] = plan_produktion[i]
-        fertigung[i].iloc[4, 2] = min(max(plan_produktion[i], nachfrage[i]), fertigung[i].iloc[ende_kapazität, 1] / p_kapazität[0], arbeiter[i][2] * a_kapazität[0] * (1+überstunden_max))
+        fertigung[i].iloc[4, 2] = min(max(plan_produktion[i], nachfrage[i] - lager[0].iloc[4, 2]), fertigung[i].iloc[ende_kapazität, 1] / p_kapazität[0], arbeiter[i][2] * a_kapazität[0] * (1+überstunden_max))
         fertigung[i].iloc[6, 2] = fertigung[i].iloc[4, 2]/fertigung[i].iloc[ende_kapazität, 1]
         fertigung[i].iloc[7, 2] = fertigung[i].iloc[4, 2]/(arbeiter[i][2]*a_kapazität[0])
 
-        verkauf = min(fertigung[i].iloc[4, 2], nachfrage[i])
+        verkauf = min(fertigung[i].iloc[4, 2] + lager[0].iloc[4, 2], nachfrage[i])
 
         #Auslastung Fertigungsanlagen
         fertigung[i].iloc[ende_kapazität + 4, 2] = fertigung[i].iloc[3, 2]
