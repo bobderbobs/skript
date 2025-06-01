@@ -6,7 +6,7 @@ from itertools import chain
 pd.options.mode.copy_on_write = True
 
 # Excel-Datei laden
-report = pd.ExcelFile("reports1.xlsx")
+report = pd.ExcelFile("reports2.xlsx")
 
 # Namen aller Tabellenblätter anzeigen
 #print(report.sheet_names)
@@ -54,15 +54,15 @@ tech_cost_increase = 2
 einstellung = 15
 entlassung = 10
 nebenkosten = 30
-lohn = [36.1, 33, 41.2, 39.1]
+lohn = [37.2, 34, 42.4, 40.3]
 überstunden_max = 0.20
 überstunden_kosten = 0.25
 
 einkauf_mengen = [35000, 45000, 60000, 80000, 1000000]
-einkauf_preise = [39, 35, 33, 31, 29]
-einkauf_jit = 35
+einkauf_preise = [41, 37, 35, 33, 31]
+einkauf_jit = 50
 lagerkosten = [3, 5]
-transport = 3
+transport = 5
 betrieb = 3
 
 #Einkauf, Verwaltung, F&E, Vertieb, Verwaltung
@@ -80,7 +80,7 @@ steuern = 35
 
 ### Entscheidungen/Erwartungen
 
-anzahl = 1
+anzahl = 3
 
 for i in range(anzahl):
     forschung.append(forschung[0].copy())
@@ -94,17 +94,17 @@ for i in range(anzahl):
     bilanz.append(bilanz[0].copy())
 
 
-nachfrage = [0, 33955, 40000, 43000]
+nachfrage = [0, 36000, 40000, 43000]
 fluktuation = [0, 0, 0, 0]
 
-plan_einkauf = [0, 45000, 45000, 45000]
-plan_produktion = [0, 45000, 45000, 45000]
-abschaffen = [1, 0, 0, 0]
-m_anschaffen = [1, 0]
-tech_increase = [0, 2, 2, 2]
-arbeiter = [[2, 2, 20, 6], [3, 2, 23, 10], [3, 2, 23, 10], [3, 2, 23, 10]]
-werbung = [0, 600, 600, 600]
-preis = [0, 165, 165, 165]
+plan_einkauf = [0, 82000, 82000, 82000]
+plan_produktion = [0, 46000, 46000, 46000]
+abschaffen = [0, 0, 0, 0]
+m_anschaffen = [0, 0]
+tech_increase = [0, 1, 1, 1]
+arbeiter = [[2, 2, 20, 6], [3, 2, 23, 13], [3, 2, 23, 13], [3, 2, 23, 13]]
+werbung = [0, 750, 750, 750]
+preis = [0, 160, 160, 160]
 
 
 ###
