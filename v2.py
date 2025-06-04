@@ -6,7 +6,7 @@ from itertools import chain
 pd.options.mode.copy_on_write = True
 
 # Excel-Datei laden
-report = pd.ExcelFile("reports2.xlsx")
+report = pd.ExcelFile("reports3.xlsx")
 
 # Namen aller Tabellenblätter anzeigen
 #print(report.sheet_names)
@@ -41,7 +41,7 @@ m_fixkosten = [40, 35]
 m_resterlös = [25, 25]
 
 p_kapazität = [1]
-a_kapazität = [2000]
+a_kapazität = [1900]
 
 tech_step_cost = 100
 tech_cost_increase = 2
@@ -54,7 +54,7 @@ tech_cost_increase = 2
 einstellung = 15
 entlassung = 10
 nebenkosten = 30
-lohn = [37.2, 34, 42.4, 40.3]
+lohn = [37.6, 34.3, 42.4, 40.7]
 überstunden_max = 0.20
 überstunden_kosten = 0.25
 
@@ -68,11 +68,11 @@ betrieb = 3
 #Einkauf, Verwaltung, F&E, Vertieb, Verwaltung
 sonstige_fix = [50, 50, 0, 100, 100]
 
-einzahlung = 0.8
+einzahlung = [80, 75]
 auszahlung = 1
 
 #überziehung, langzeit
-zinsen = [6, 4]
+zinsen = [5, 4]
 
 steuern = 35
 
@@ -94,15 +94,15 @@ for i in range(anzahl):
     bilanz.append(bilanz[0].copy())
 
 
-nachfrage = [0, 45000, 49000, 56000]
+nachfrage = [0, 60000, 60000, 60000]
 fluktuation = [0, 0, 0, 0]
 
-plan_einkauf = [0, 46000, 46000, 46000]
-plan_produktion = [0, 46000, 46000, 46000]
+plan_einkauf = [0, 60000, 60000, 60000]
+plan_produktion = [0, 60000, 60000, 60000]
 abschaffen = [0, 0, 0, 0]
-m_anschaffen = [0, 0]
-tech_increase = [0, 1, 1, 1]
-arbeiter = [[2, 2, 20, 6], [3, 2, 23, 13], [3, 2, 23, 13], [3, 2, 23, 13]]
+m_anschaffen = [1, 0]
+tech_increase = [0, 0, 0, 0]
+arbeiter = [[2, 2, 20, 6], [4, 4.5, 26, 13], [4, 4.5, 31, 13], [4, 4.5, 32, 13]]
 werbung = [0, 750, 750, 750]
 preis = [0, 160, 160, 160]
 
@@ -231,7 +231,7 @@ for i in range(1, anzahl+1):
             #Personalkosten
             personal[i].iloc[11, j+2] = personal[i].iloc[7, j+2] * lohn[j]
             if j == 2 and fertigung[i].iloc[7, 2] >= 1.0:
-                personal[i].iloc[11, j+2] = personal[i].iloc[11, j+2] * (1 + überstunden_kosten * (fertigung[i].iloc[ende_kapazität + 18, 2]-arbeiter[i][2]))
+                personal[i].iloc[11, j+2] *= (1 + überstunden_kosten * (fertigung[i].iloc[7, 2] - 1))
             personal[i].iloc[12, j+2] = personal[i].iloc[4, j+2] * einstellung + personal[i].iloc[5, j+2] * entlassung
             personal[i].iloc[13, j+2] = (personal[i].iloc[11, j+2] * nebenkosten)/100
             personal[i].iloc[14, j+2] = personal[i].iloc[11, j+2] + personal[i].iloc[12, j+2] + personal[i].iloc[13, j+2]
@@ -409,8 +409,8 @@ for i in range(1, anzahl+1):
     if True:
         liquidität[i].iloc[3, 1] = liquidität[0].iloc[32, 1]
         #Einzahlungen
-        liquidität[i].iloc[7, 1] = gewinn[i].iloc[17, 1] * einzahlung
-        liquidität[i].iloc[8, 1] = gewinn[0].iloc[17, 1] * (1-einzahlung)
+        liquidität[i].iloc[7, 1] = gewinn[i].iloc[17, 1] * einzahlung[1] / 100
+        liquidität[i].iloc[8, 1] = gewinn[0].iloc[17, 1] * (100-einzahlung[0]) / 100
         #desinvestitionen werden oben gemacht
 
         #Auszahlungen
@@ -443,6 +443,7 @@ for i in range(1, anzahl+1):
         #print(gewinn[i].iloc[16:])
 
     print(kostenträger[i])
+    print(liquidität[i])
 
     print()
     print()
