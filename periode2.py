@@ -6,7 +6,7 @@ from itertools import chain
 pd.options.mode.copy_on_write = True
 
 # Excel-Datei laden
-report = pd.ExcelFile("reports3.xlsx")
+report = pd.ExcelFile("reports2.xlsx")
 
 # Namen aller Tabellenblätter anzeigen
 #print(report.sheet_names)
@@ -41,7 +41,7 @@ m_fixkosten = [40, 35]
 m_resterlös = [25, 25]
 
 p_kapazität = [1]
-a_kapazität = [1900]
+a_kapazität = [2000]
 
 tech_step_cost = 100
 tech_cost_increase = 2
@@ -54,7 +54,7 @@ tech_cost_increase = 2
 einstellung = 15
 entlassung = 10
 nebenkosten = 30
-lohn = [37.6, 34.3, 42.4, 40.7]
+lohn = [37.2, 34, 42.4, 40.3]
 überstunden_max = 0.20
 überstunden_kosten = 0.25
 
@@ -62,17 +62,17 @@ einkauf_mengen = [35000, 45000, 60000, 80000, 1000000]
 einkauf_preise = [41, 37, 35, 33, 31]
 einkauf_jit = 50
 lagerkosten = [3, 5]
-transport = 5
+transport = 4.754
 betrieb = 3
 
 #Einkauf, Verwaltung, F&E, Vertieb, Verwaltung
 sonstige_fix = [50, 50, 0, 100, 100]
 
-einzahlung = [80, 75]
+einzahlung = [80, 80]
 auszahlung = 1
 
 #überziehung, langzeit
-zinsen = [5, 4]
+zinsen = [6, 4]
 
 steuern = 35
 
@@ -94,17 +94,18 @@ for i in range(anzahl):
     bilanz.append(bilanz[0].copy())
 
 
-nachfrage = [0, 48000, 60000, 60000]
+nachfrage = [0, 66101, 60000, 60000]
 fluktuation = [0, 0, 0, 0]
 
-plan_einkauf = [0, 48000, 60000, 60000]
-plan_produktion = [0, 48000, 60000, 60000]
+plan_einkauf = [0, 46000, 60000, 60000]
+plan_produktion = [0, 46000, 60000, 60000]
 abschaffen = [0, 0, 0, 0]
 m_anschaffen = [0, 0]
-tech_increase = [0, 0, 1, 1]
-arbeiter = [[2, 2, 20, 6], [4.5, 5.5, 26, 13], [4, 5, 31, 13], [4, 5, 32, 13]]
-werbung = [0, 750, 750, 750]
-preis = [0, 160, 160, 160]
+tech_increase = [0, 1, 1, 1]
+arbeiter = [[2, 2, 20, 6], [4, 4.5, 23, 13], [4, 5, 31, 13], [4, 5, 32, 13]]
+werbung = [0, 600, 600, 600]
+corporate = [0, 150, 150, 150]
+preis = [0, 159.50, 160, 160]
 
 
 ###
@@ -295,6 +296,7 @@ for i in range(1, anzahl+1):
 
         kostenstellen[i].iloc[15, 2:7] = sonstige_fix
         kostenstellen[i].iloc[15, 3] += fertigung[i].iloc[ende_fertigungsanlagen, 6]
+        kostenstellen[i].iloc[17, 5] = corporate[i]
 
         #Lagerkosten fehlen noch
         for k in [2, 3, 4, 6]:
@@ -325,11 +327,11 @@ for i in range(1, anzahl+1):
     #restlicher Lagerbericht
     if True:
         lager[i].iloc[18, 1] = lager[0].iloc[21, 1]
-        lager[i].iloc[18, 2] = lager[0].iloc[21, 2]
+        lager[i].iloc[18, 3] = lager[0].iloc[21, 3]
+        lager[i].iloc[18, 2] = lager[i].iloc[18, 3] / lager[i].iloc[18, 1]
         lager[i].iloc[19, 1] = fertigung[i].iloc[4, 2]
         lager[i].iloc[19, 2] = kostenträger[i].iloc[24, 2]
-        for j in [18, 19]:
-            lager[i].iloc[j, 3] = lager[i].iloc[j, 1] * lager[i].iloc[j, 2] / 1000
+        lager[i].iloc[19, 3] = lager[i].iloc[19, 1] * lager[i].iloc[19, 2] / 1000
         lager[i].iloc[20, 1] = verkauf
         for j in [1, 3]:
             lager[i].iloc[21, j] = sum(lager[i].iloc[[18, 19], j])
@@ -412,12 +414,13 @@ for i in range(1, anzahl+1):
         liquidität[i].iloc[7, 1] = gewinn[i].iloc[17, 1] * einzahlung[1] / 100
         liquidität[i].iloc[8, 1] = gewinn[0].iloc[17, 1] * (100-einzahlung[0]) / 100
         #desinvestitionen werden oben gemacht
+
  
         #Auszahlungen
         liquidität[i].iloc[18, 1] = kostenträger[i].iloc[3, 2] * auszahlung
         liquidität[i].iloc[19, 1] = kostenträger[0].iloc[3, 2] * (1-auszahlung)
         liquidität[i].iloc[20, 1] = personal[i].iloc[14, 6]
-        liquidität[i].iloc[21, 1] = sum(kostenträger[i].iloc[range(10, 13), 2]) + sum(kostenstellen[i].iloc[[15, 16], 1])
+        liquidität[i].iloc[21, 1] = sum(kostenträger[i].iloc[range(10, 13), 2]) + sum(kostenstellen[i].iloc[[15, 17], 1])
         liquidität[i].iloc[22, 1] = liquidität[0].iloc[13, 1]
         liquidität[i].iloc[23, 1] = bilanz[0].iloc[11, 4] * zinsen[1] / 100
 
@@ -434,16 +437,20 @@ for i in range(1, anzahl+1):
             liquidität[i].iloc[13, 1] = -end
             gewinn[i].iloc[31, 1] = -end * zinsen[0]/100
             
+        liquidität[i].iloc[14, 1] = sum(liquidität[i].iloc[7:14, 1])
+        gewinn[i].iloc[28, 1] = gewinn[i].iloc[29, 1] - gewinn[i].iloc[30, 1] - gewinn[i].iloc[31, 1]
         gewinn[i].iloc[32, 1] = gewinn[i].iloc[27, 1] - sum(gewinn[i].iloc[[30, 31], 1])
+        print(gewinn[i].iloc[32, 1], gewinn[i].iloc[27, 1], sum(gewinn[i].iloc[[30, 31], 1]))
         gewinn[i].iloc[33, 1] = max(gewinn[i].iloc[32, 1] * steuern / 100, 0)
+        liquidität[i].iloc[27, 1] = gewinn[i].iloc[33, 1]
         gewinn[i].iloc[34, 1] = gewinn[i].iloc[32, 1] - gewinn[i].iloc[33, 1]
+        liquidität[i].iloc[28, 1] = sum(liquidität[i].iloc[18:28, 1])
 
         
         #print(liquidität[i])
         #print(gewinn[i].iloc[16:])
 
-    print(kostenträger[i])
-    print(gewinn[i])
+    print(gewinn[i].iloc[17:35])
     print(liquidität[i])
 
     print()
