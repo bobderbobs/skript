@@ -100,9 +100,9 @@ fluktuation = [0, 0, 0, 0]
 plan_einkauf = [0, 60000, 60000, 60000]
 plan_produktion = [0, 60000, 60000, 60000]
 abschaffen = [0, 0, 0, 0]
-m_anschaffen = [0, 0]
+m_anschaffen = [1, 0]
 tech_increase = [0, 1, 1, 1]
-arbeiter = [[2, 2, 20, 6], [4, 4.5, 32, 13], [4, 5, 31, 13], [4, 5, 32, 13]]
+arbeiter = [[2, 2, 20, 6], [4.5, 5.5, 32, 13], [4, 5, 31, 13], [4, 5, 32, 13]]
 werbung = [0, 600, 600, 600]
 corporate = [0, 150, 150, 150]
 preis = [0, 160, 160, 160]
@@ -328,7 +328,10 @@ for i in range(1, anzahl+1):
     if True:
         lager[i].iloc[18, 1] = lager[0].iloc[21, 1]
         lager[i].iloc[18, 3] = lager[0].iloc[21, 3]
-        lager[i].iloc[18, 2] = lager[i].iloc[18, 3] / lager[i].iloc[18, 1]
+        if lager[i].iloc[18, 1] == 0:
+            lager[i].iloc[18, 2] = 0
+        else:
+            lager[i].iloc[18, 2] = lager[i].iloc[18, 3] / lager[i].iloc[18, 1]
         lager[i].iloc[19, 1] = fertigung[i].iloc[4, 2]
         lager[i].iloc[19, 2] = kostenträger[i].iloc[24, 2]
         lager[i].iloc[19, 3] = lager[i].iloc[19, 1] * lager[i].iloc[19, 2] / 1000
@@ -450,6 +453,7 @@ for i in range(1, anzahl+1):
         #print(liquidität[i])
         #print(gewinn[i].iloc[16:])
 
+    print(kostenträger[i])
     print(gewinn[i].iloc[17:35])
     print(liquidität[i])
 
